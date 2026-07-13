@@ -1,39 +1,32 @@
 <div align="center">
 
-# 🌌 T-Nebula
-### *Navigate your focus sessions through the deep gravity fields of the cosmos.*
+# 🪐 T-Nebula
+### *Orbit Your Productivity — An Aesthetic Cosmic Focus Timer*
 
-[![React](https://img.shields.io/badge/React-19.2-blue?style=for-the-badge&logo=react&logoColor=61DAFB&color=0d1117&labelColor=20232a)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-blue?style=for-the-badge&logo=typescript&logoColor=3178C6&color=0d1117&labelColor=20232a)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-8.1-purple?style=for-the-badge&logo=vite&logoColor=646CFF&color=0d1117&labelColor=20232a)](https://vite.dev/)
-[![Three.js](https://img.shields.io/badge/Three.js-r185-black?style=for-the-badge&logo=three.js&logoColor=white&color=0d1117&labelColor=20232a)](https://threejs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.0-cyan?style=for-the-badge&logo=tailwindcss&logoColor=38B2AC&color=0d1117&labelColor=20232a)](https://tailwindcss.com/)
+[![React](https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react&logoColor=61DAFB&color=0d1117&labelColor=1f2937)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8-purple?style=for-the-badge&logo=vite&logoColor=646CFF&color=0d1117&labelColor=1f2937)](https://vite.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-blue?style=for-the-badge&logo=typescript&logoColor=3178C6&color=0d1117&labelColor=1f2937)](https://www.typescriptlang.org/)
+[![Three.js](https://img.shields.io/badge/Three.js-r185-white?style=for-the-badge&logo=three.js&logoColor=white&color=0d1117&labelColor=1f2937)](https://threejs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-cyan?style=for-the-badge&logo=tailwindcss&logoColor=38B2AC&color=0d1117&labelColor=1f2937)](https://tailwindcss.com/)
 
 </div>
 
 ---
 
-## 🪐 Tentang T-Nebula
-
-**T-Nebula** adalah aplikasi *focus timer* (Pomodoro) imersif berbasis web yang mengombinasikan ketenangan luar angkasa dengan estetika kosmik modern. Alih-alih menggunakan pengukur waktu biasa, **T-Nebula** mengajak Anda untuk mengorbit di sekitar planet pilihan Anda, memicu *flow-state* melalui visualisasi gravitasi dan efek bintang dinamis.
-
-> [!NOTE]
-> Proyek ini dirancang khusus dengan perpaduan **React 19**, **Three.js** untuk simulasi 3D planet yang mulus, dan **Framer Motion** untuk menghadirkan mikro-animasi antarmuka kelas premium.
+**T-Nebula** adalah aplikasi *flow-state timer* (Pomodoro) bertema kosmik yang dirancang untuk membantumu menjelajahi sesi fokus layaknya mengorbit di luar angkasa. Pilih planetmu, aktifkan gravitasi fokus, dan capai *aphelion* produktivitasmu.
 
 ---
 
-## 🚀 Fitur Utama Kosmik
+## 🚀 Fitur Utama
 
-*   **🪐 Orbital Planet Selector**  
-    Pilih tujuan orbit Anda dari 8 planet di Tata Surya. Setiap planet dirender secara 3D dengan tekstur unik dan memancarkan radiasi warna aksen yang berbeda.
-*   **🌌 Dynamic Parallax Starfield**  
-    Efek latar belakang bintang yang bereaksi secara interaktif terhadap gerakan kursor mouse, memberikan kedalaman visual dimensi ruang angkasa yang nyata.
-*   **🌀 Interactive Gravity Field**  
-    Ketika waktu fokus dimulai (*Deep Orbit*), partikel cincin gravitasi di sekitar planet akan berputar menyesuaikan sisa waktu Anda untuk memberikan umpan balik visual yang menenangkan.
-*   **✨ Cosmic Sparkle Trails**  
-    Jejak partikel bercahaya yang mengikuti fokus Anda, menghadirkan estetika premium pada alur kerja produktivitas Anda.
-*   **⚙️ Custom Quantum Configuration**  
-    Sesuaikan durasi fokus Anda secara fleksibel menggunakan konsol pengaturan orbital.
+- 🪐 **Cosmic Planet Selection**  
+  Pilih dari berbagai planet (Merkurius, Venus, Bumi, Mars, Jupiter, Saturnus, Uranus, Neptunus) dengan skema warna aksen dinamis yang unik.
+- 🌌 **Parallax Space Background**  
+  Latar belakang bintang interaktif yang bergerak dinamis mengikuti pergerakan kursor mouse.
+- 🌀 **Gravity Field & Sparkle Trails**  
+  Visualisasi partikel gravitasi dan efek cahaya (*sparkle*) yang memukau saat timer berjalan, memperkuat nuansa imersif luar angkasa.
+- ⏱️ **Orbital Duration Settings**  
+  Sesuaikan durasi waktu fokusmu melalui panel pengaturan kosmik yang modern dan futuristik.
 
 ---
 
@@ -41,7 +34,7 @@
 
 Setiap planet memancarkan warna energi unik yang akan mengubah seluruh skema warna antarmuka aplikasi saat dipilih:
 
-| Planet | Kode Warna Aksen | Representasi Kosmik |
+| Planet | Warna Aksen | Representasi Kosmik |
 | :---: | :---: | :--- |
 | **Merkurius** | `#c0b8b0` | Energi Batuan Klasik & Tenang |
 | **Venus** | `#f0b858` | Radiasi Awan Asam & Hangat |
@@ -54,62 +47,46 @@ Setiap planet memancarkan warna energi unik yang akan mengubah seluruh skema war
 
 ---
 
-## 📂 Arsitektur Orbital (Struktur Folder)
+## ⚙️ Cara Menjalankan Project
 
-Struktur komponen utama dirancang secara modular untuk efisiensi rendering:
-
-```text
-src/
- ├── components/
- │    ├── CosmicTimer.tsx      # Reaktor inti pengatur logika & state timer
- │    ├── PlanetRenderer.tsx   # Mesin visual 3D Planet (Three.js WebGL)
- │    ├── GravityField.tsx     # Generator orbit partikel melingkar
- │    ├── CosmicStar.tsx       # Bintang pemancar status fokus (Idle, Running, Success)
- │    ├── SparkleTrail.tsx     # Jejak partikel interaktif
- │    └── SettingsModal.tsx    # Konsol kontrol parameter durasi & planet
- ├── hooks/
- │    └── useSettings.ts       # Pusat kendali penyimpanan state & preferensi
- ├── index.css                # Desain sistem & token warna luar angkasa
- └── App.tsx                  # Pintu gerbang utama aplikasi
-```
-
----
-
-## 🛸 Cara Meluncur (Panduan Instalasi)
-
-Pastikan Node.js terinstal di sistem Anda sebelum memulai peluncuran.
+Ikuti langkah-langkah di bawah ini untuk menjalankan **T-Nebula** di mesin lokalmu:
 
 ### 1. Kloning Repositori
 ```bash
-git clone https://github.com/username/t-nebula.git
+git clone https://github.com/AdhNaufall/T-Nebula.git
 cd t-nebula
 ```
 
-### 2. Isi Bahan Bakar (Instalasi Dependensi)
+### 2. Instalasi Dependensi
 ```bash
 npm install
 ```
 
-### 3. Luncurkan Mesin (Mode Pengembangan)
+### 3. Jalankan Server Pengembangan
 ```bash
 npm run dev
 ```
-Setelah mesin menyala, buka **`http://localhost:5173`** pada peramban Anda untuk memulai simulasi orbit.
+Setelah dijalankan, buka `http://localhost:5173` di browsermu.
 
 ---
 
-## 🛡️ Orbital State Workflow
+## 🔮 State Orbital
 
-Alur fokus didefinisikan ke dalam empat kondisi kuantum:
+Aplikasi ini memiliki 4 fase utama dalam perjalanan fokusmu:
 
 ```mermaid
 graph LR
-    A["🛰️ Orbital Hold (Idle)"] -->|Ignite| B["🚀 Deep Orbit (Running)"]
-    B -->|Pause| C["🛸 Gravity Drift (Paused)"]
-    C -->|Resume| B
-    B -->|Complete| D["🌟 Aphelion Reached (Success)"]
-    D -->|Reset| A
+    A["🛰️ Orbital Hold (Idle)"] --> B["🚀 Deep Orbit (Running)"]
+    B --> C["🛸 Gravity Drift (Paused)"]
+    C --> B
+    B --> D["🌟 Aphelion Reached (Success)"]
+    D --> A
 ```
+
+- 🛰️ **Orbital Hold (Idle)** — Memilih planet tujuan dan bersiap melakukan peluncuran.
+- 🚀 **Deep Orbit (Running)** — Mode fokus aktif dengan visualisasi kosmik berjalan.
+- 🛸 **Gravity Drift (Paused)** — Orbit terhenti sementara waktu.
+- 🌟 **Aphelion Reached (Success)** — Misi selesai! Sesi fokus berhasil diselesaikan.
 
 ---
 
