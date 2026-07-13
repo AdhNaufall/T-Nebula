@@ -1,17 +1,3 @@
-<div align="center">
-
-# 🪐 T-Nebula
-### *Orbit Your Productivity — An Aesthetic Cosmic Focus Timer*
-
-[![React](https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react&logoColor=61DAFB&color=0d1117&labelColor=1f2937)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-8-purple?style=for-the-badge&logo=vite&logoColor=646CFF&color=0d1117&labelColor=1f2937)](https://vite.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-6-blue?style=for-the-badge&logo=typescript&logoColor=3178C6&color=0d1117&labelColor=1f2937)](https://www.typescriptlang.org/)
-[![Three.js](https://img.shields.io/badge/Three.js-r185-white?style=for-the-badge&logo=three.js&logoColor=white&color=0d1117&labelColor=1f2937)](https://threejs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-cyan?style=for-the-badge&logo=tailwindcss&logoColor=38B2AC&color=0d1117&labelColor=1f2937)](https://tailwindcss.com/)
-
-</div>
-
----
 
 **T-Nebula** adalah aplikasi *flow-state timer* (Pomodoro) bertema kosmik yang dirancang untuk membantumu menjelajahi sesi fokus layaknya mengorbit di luar angkasa. Pilih planetmu, aktifkan gravitasi fokus, dan capai *aphelion* produktivitasmu.
 
@@ -87,9 +73,3 @@ graph LR
 - 🚀 **Deep Orbit (Running)** — Mode fokus aktif dengan visualisasi kosmik berjalan.
 - 🛸 **Gravity Drift (Paused)** — Orbit terhenti sementara waktu.
 - 🌟 **Aphelion Reached (Success)** — Misi selesai! Sesi fokus berhasil diselesaikan.
-
----
-
-<div align="center">
-  <sub>Dibuat dengan 💜 untuk para Penjelajah Produktivitas Kosmik.</sub>
-</div>
