@@ -13,6 +13,14 @@ interface PlanetOption {
 
 const PLANET_OPTIONS: PlanetOption[] = [
   {
+    type: "sun",
+    label: "Sun",
+    emoji: "☀️",
+    description: "The star at the center of our Solar System. Blazing heat, immense gravity — ultimate solar power focus.",
+    accent: "#ff5500",
+    glowColor: "#ff7700",
+  },
+  {
     type: "mercury",
     label: "Mercury",
     emoji: "⚫",

@@ -1,6 +1,7 @@
 import { useState } from "react"
 
 export type PlanetType =
+  | "sun"
   | "mercury"
   | "venus"
   | "earth"

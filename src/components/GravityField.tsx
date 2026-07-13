@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react"
 import { motion, useSpring, useMotionValue } from "framer-motion"
+import type { PlanetType } from "../hooks/useSettings"
 
 interface Particle {
   id: number
@@ -11,9 +12,20 @@ interface Particle {
   speed: number
 }
 
-const COLORS = ["#66FCF1", "#a5f3fc", "#e0f2fe", "#ffffff", "#67e8f9"]
+const PLANET_COLORS: Record<PlanetType, string[]> = {
+  sun:     ["#ff3300", "#ff6600", "#ffaa00", "#ffd700", "#ffffff"],
+  mercury: ["#908880", "#a8a098", "#c0b8b0", "#d8d0c8", "#ffffff"],
+  venus:   ["#d09030", "#e8a848", "#f0b858", "#fcd888", "#ffffff"],
+  earth:   ["#1a73e8", "#34a853", "#66FCF1", "#a5f3fc", "#ffffff"],
+  mars:    ["#b83820", "#d04830", "#E07A5F", "#f09078", "#ffffff"],
+  jupiter: ["#a06020", "#b87030", "#d08040", "#e8c070", "#ffffff"],
+  saturn:  ["#b08850", "#c8a060", "#e8c070", "#f8d890", "#ffffff"],
+  uranus:  ["#40a0a0", "#58b8b8", "#88e8e8", "#b0f0f0", "#ffffff"],
+  neptune: ["#2040b0", "#3858c8", "#5878e0", "#80a0f0", "#ffffff"],
+}
 
-function generateParticles(count: number): Particle[] {
+function generateParticles(count: number, planetType: PlanetType): Particle[] {
+  const colors = PLANET_COLORS[planetType] ?? PLANET_COLORS["earth"]
   return Array.from({ length: count }, (_, i) => {
     const angle = (i / count) * 2 * Math.PI + Math.random() * 0.5
     const radius = 90 + Math.random() * 60
@@ -22,7 +34,7 @@ function generateParticles(count: number): Particle[] {
       baseX: Math.cos(angle) * radius,
       baseY: Math.sin(angle) * radius,
       size: Math.random() * 3 + 1.5,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      color: colors[Math.floor(Math.random() * colors.length)],
       opacity: Math.random() * 0.6 + 0.3,
       speed: Math.random() * 0.04 + 0.02,
     }
@@ -31,11 +43,12 @@ function generateParticles(count: number): Particle[] {
 
 interface GravityFieldProps {
   active: boolean
+  planetType: PlanetType
 }
 
-export function GravityField({ active }: GravityFieldProps) {
+export function GravityField({ active, planetType }: GravityFieldProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [particles] = useState(() => generateParticles(18))
+  const [particles] = useState(() => generateParticles(18, planetType))
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 

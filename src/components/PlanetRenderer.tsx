@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react"
 import * as THREE from "three"
 
 export type PlanetType =
+  | "sun"
   | "mercury"
   | "venus"
   | "earth"
@@ -22,7 +23,7 @@ interface PlanetRendererProps {
 // HELPERS & TEXTURE MAPPING
 // ─────────────────────────────────────────────
 
-const PLANET_TEXTURES: Record<PlanetType, string> = {
+const PLANET_TEXTURES: Record<Exclude<PlanetType, "sun">, string> = {
   mercury: "/textures/mercurymap.jpg",
   venus:   "/textures/venusmap.jpg",
   earth:   "/textures/earthmap1k.jpg",
@@ -31,6 +32,50 @@ const PLANET_TEXTURES: Record<PlanetType, string> = {
   saturn:  "/textures/saturnmap.jpg",
   uranus:  "/textures/uranusmap.jpg",
   neptune: "/textures/neptunemap.jpg",
+}
+
+function generateSunTexture(): THREE.CanvasTexture {
+  const c = document.createElement("canvas")
+  c.width = 512
+  c.height = 256
+  const ctx = c.getContext("2d")!
+  
+  // Base background: fiery red/orange gradient
+  const grad = ctx.createLinearGradient(0, 0, 0, 256)
+  grad.addColorStop(0, "#e63b00")
+  grad.addColorStop(0.5, "#ff8800")
+  grad.addColorStop(1, "#e63b00")
+  ctx.fillStyle = grad
+  ctx.fillRect(0, 0, 512, 256)
+  
+  // Draw plasma cells
+  for (let i = 0; i < 400; i++) {
+    const x = Math.random() * 512
+    const y = Math.random() * 256
+    const r = 10 + Math.random() * 30
+    const cellGrad = ctx.createRadialGradient(x, y, 0, x, y, r)
+    cellGrad.addColorStop(0, "rgba(255, 230, 0, 0.45)")
+    cellGrad.addColorStop(0.5, "rgba(255, 100, 0, 0.15)")
+    cellGrad.addColorStop(1, "rgba(0, 0, 0, 0)")
+    
+    ctx.fillStyle = cellGrad
+    ctx.beginPath()
+    ctx.arc(x, y, r, 0, Math.PI * 2)
+    ctx.fill()
+  }
+
+  // Draw some solar prominence patterns
+  ctx.strokeStyle = "rgba(255, 255, 200, 0.15)"
+  ctx.lineWidth = 2
+  for (let i = 0; i < 15; i++) {
+    ctx.beginPath()
+    const yStart = Math.random() * 256
+    ctx.moveTo(0, yStart)
+    ctx.bezierCurveTo(128, yStart + 50 - Math.random() * 100, 384, yStart + 50 - Math.random() * 100, 512, yStart)
+    ctx.stroke()
+  }
+  
+  return new THREE.CanvasTexture(c)
 }
 
 function generateSaturnRingTexture(): THREE.CanvasTexture {
@@ -58,6 +103,7 @@ function generateSaturnRingTexture(): THREE.CanvasTexture {
 // AXIAL TILTS (in radians)
 // ─────────────────────────────────────────────
 const PLANET_TILT: Record<PlanetType, number> = {
+  sun:     (7.25 * Math.PI) / 180,
   mercury: 0.03,
   venus:   (177.4 * Math.PI) / 180, // near upside-down retrograde
   earth:   (23.5 * Math.PI) / 180,
@@ -131,12 +177,24 @@ export function PlanetRenderer({ planetType, state }: PlanetRendererProps) {
     // Planet sphere (scaled down to 0.8)
     const geo = new THREE.SphereGeometry(0.8, 64, 64)
     const textureLoader = new THREE.TextureLoader()
-    const tex = textureLoader.load(PLANET_TEXTURES[planetType])
-    const mat = new THREE.MeshPhongMaterial({
-      map: tex,
-      shininess: planetType === "venus" ? 25 : 6,
-      specular: new THREE.Color(0x0d0d0d),
-    })
+    
+    let tex: THREE.Texture
+    let mat: THREE.Material
+    
+    if (planetType === "sun") {
+      tex = generateSunTexture()
+      mat = new THREE.MeshBasicMaterial({
+        map: tex,
+      })
+    } else {
+      tex = textureLoader.load(PLANET_TEXTURES[planetType])
+      mat = new THREE.MeshPhongMaterial({
+        map: tex,
+        shininess: planetType === "venus" ? 25 : 6,
+        specular: new THREE.Color(0x0d0d0d),
+      })
+    }
+
     const sphere = new THREE.Mesh(geo, mat)
     sphere.rotation.z = PLANET_TILT[planetType]
     planetGroup.add(sphere)

@@ -15,6 +15,12 @@ const PLANET_CONFIGS: Record<
     particleColor: string
   }
 > = {
+  sun: {
+    idleCorona:    "#b04000",
+    runningCorona: "#ff6600",
+    pulseDuration: 1.2,
+    particleColor: "#ffd700",
+  },
   mercury: {
     idleCorona:    "#606060",
     runningCorona: "#b0a8a0",
@@ -147,39 +153,40 @@ export function CosmicStar({
       {/* Orbiting particle dust cloud (visible when running) */}
       {state === "running" && (
         <div className="absolute inset-0 pointer-events-none z-20">
-          {[...Array(10)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                width: "3px",
-                height: "3px",
-                backgroundColor: cfg.particleColor,
-                top: "50%",
-                left: "50%",
-                translateX: "-50%",
-                translateY: "-50%",
-                boxShadow: `0 0 4px ${cfg.particleColor}`,
-              }}
-              initial={{
-                x: Math.cos((i * 36) * (Math.PI / 180)) * 115,
-                y: Math.sin((i * 36) * (Math.PI / 180)) * 115,
-                opacity: 0,
-              }}
-              animate={{
-                x: 0,
-                y: 0,
-                opacity: [0, 0.85, 0],
-                scale: [1, 0.4, 0],
-              }}
-              transition={{
-                duration: 2.2,
-                repeat: Infinity,
-                delay: i * 0.18,
-                ease: "easeIn",
-              }}
-            />
-          ))}
+          {[...Array(15)].map((_, i) => {
+            const angle = (i * (360 / 15)) * (Math.PI / 180)
+            const radius = 95 + (i % 3) * 12
+            const speed = 2.5 + (i % 4) * 0.6
+            const size = 2 + (i % 2)
+            
+            return (
+              <motion.div
+                key={i}
+                className="absolute rounded-full"
+                style={{
+                  position: "absolute",
+                  width: `${size}px`,
+                  height: `${size}px`,
+                  backgroundColor: cfg.particleColor,
+                  top: "50%",
+                  left: "50%",
+                  boxShadow: `0 0 5px ${cfg.particleColor}`,
+                  x: Math.cos(angle) * radius,
+                  y: Math.sin(angle) * radius,
+                  transformOrigin: `${-Math.cos(angle) * radius}px ${-Math.sin(angle) * radius}px`,
+                }}
+                animate={{
+                  rotate: [0, 360],
+                }}
+                transition={{
+                  duration: speed,
+                  repeat: Infinity,
+                  ease: "linear",
+                  delay: i * -0.15,
+                }}
+              />
+            )
+          })}
         </div>
       )}
     </div>

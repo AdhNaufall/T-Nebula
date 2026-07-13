@@ -96,6 +96,7 @@ export function CosmicTimer() {
 
   // Dynamic accent color per planet
   const accentColor: Record<string, string> = {
+    sun:     "#ff5500",
     mercury: "#c0b8b0",
     venus:   "#f0b858",
     earth:   "#66FCF1",
@@ -276,7 +277,7 @@ export function CosmicTimer() {
         </svg>
 
         {/* Gravity field particles */}
-        <GravityField active={timerState === 'running'} />
+        <GravityField key={settings.planetType} active={timerState === 'running'} planetType={settings.planetType} />
 
         {/* The star */}
         <CosmicStar state={timerState} starType={settings.planetType} />
