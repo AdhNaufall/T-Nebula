@@ -6,6 +6,7 @@ import { GravityField } from "./GravityField"
 import { SettingsModal } from "./SettingsModal"
 import { useSettings } from "../hooks/useSettings"
 import { SparkleTrail } from "./SparkleTrail"
+import { WarpTransition } from "./WarpTransition"
 
 const STATE_LABELS: Record<CosmicState, string> = {
   idle:    "Orbital Hold — Select your planet and ignite",
@@ -30,6 +31,17 @@ export function CosmicTimer() {
   const [timeLeft, setTimeLeft] = useState(settings.duration * 60)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [prevDuration, setPrevDuration] = useState(settings.duration)
+  const [isWarping, setIsWarping] = useState(false)
+
+  const triggerWarpTransition = (action: () => void) => {
+    setIsWarping(true)
+    setTimeout(() => {
+      action()
+    }, 450)
+    setTimeout(() => {
+      setIsWarping(false)
+    }, 900)
+  }
 
   // Track mouse coordinates for parallax space backgrounds
   useEffect(() => {
@@ -211,6 +223,24 @@ export function CosmicTimer() {
       {/* ── Sparkle Mouse Drag Trail ── */}
       <SparkleTrail color={accent} />
 
+      {/* ── Space Warp Transition Overlay ── */}
+      <WarpTransition active={isWarping} color={accent} />
+
+      {/* ── Main UI Content Wrapper (stretches/blurs on warp) ── */}
+      <motion.div
+        className="relative z-10 flex flex-col items-center justify-center w-full"
+        animate={{
+          scale: isWarping ? 1.25 : 1,
+          filter: isWarping ? "blur(8px)" : "blur(0px)",
+          opacity: isWarping ? 0.35 : 1,
+          rotate: isWarping ? 2 : 0,
+        }}
+        transition={{
+          duration: 0.9,
+          ease: "easeInOut",
+        }}
+      >
+
       {/* ── Header ── */}
       <div className="absolute top-8 left-0 right-0 flex items-center justify-between px-8 z-10">
         <div>
@@ -362,13 +392,15 @@ export function CosmicTimer() {
         </motion.div>
       )}
 
+      </motion.div>
+
       {/* ── Settings Modal ── */}
       <SettingsModal
         isOpen={isSettingsOpen}
         settings={settings}
         onClose={() => setIsSettingsOpen(false)}
-        onUpdateDuration={updateDuration}
-        onUpdatePlanetType={updatePlanetType}
+        onUpdateDuration={(d) => triggerWarpTransition(() => updateDuration(d))}
+        onUpdatePlanetType={(p) => triggerWarpTransition(() => updatePlanetType(p))}
       />
     </div>
   )
