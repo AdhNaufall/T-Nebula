@@ -7,6 +7,7 @@ import { SettingsModal } from "./SettingsModal"
 import { useSettings } from "../hooks/useSettings"
 import { SparkleTrail } from "./SparkleTrail"
 import { WarpTransition } from "./WarpTransition"
+import { ShootingStars } from "./ShootingStars"
 
 const STATE_LABELS: Record<CosmicState, string> = {
   idle:    "Orbital Hold — Select your planet and ignite",
@@ -219,6 +220,9 @@ export function CosmicTimer() {
           ))}
         </div>
       </div>
+
+      {/* ── Shooting Stars Background ── */}
+      <ShootingStars color={accent} />
 
       {/* ── Sparkle Mouse Drag Trail ── */}
       <SparkleTrail color={accent} />
