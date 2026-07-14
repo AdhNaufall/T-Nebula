@@ -150,15 +150,15 @@ export function PlanetRenderer({ planetType, state }: PlanetRendererProps) {
     const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100)
     
     // Adjust camera distance to prevent clipping (especially for Saturn's rings)
+    let baseZ = 3.5
     if (planetType === "saturn") {
-      camera.position.z = 7.8
+      baseZ = 7.8
     } else if (planetType === "uranus") {
-      camera.position.z = 5.2
+      baseZ = 5.2
     } else if (planetType === "earth") {
-      camera.position.z = 3.6
-    } else {
-      camera.position.z = 3.5
+      baseZ = 3.6
     }
+    camera.position.z = baseZ
 
     // Group to hold the planet sphere, rings, and clouds as a single cohesive unit
     const planetGroup = new THREE.Group()
@@ -306,9 +306,34 @@ export function PlanetRenderer({ planetType, state }: PlanetRendererProps) {
     window.addEventListener("pointerup", onPointerUp)
 
     // Animation loop
+    const clock = new THREE.Clock()
     let animId: number
     const tick = () => {
       animId = requestAnimationFrame(tick)
+      const elapsed = clock.getElapsedTime()
+
+      // 1. Celestial Levitation (Floating effect)
+      planetGroup.position.y = Math.sin(elapsed * 1.2) * 0.06
+
+      // 2. Flow-state Breathing (Pulse scale when active)
+      if (state === "running") {
+        const breathe = 1 + Math.sin(elapsed * 1.8) * 0.015
+        planetGroup.scale.set(breathe, breathe, breathe)
+      } else if (state === "success") {
+        const vibrate = 1 + Math.sin(elapsed * 12) * 0.008
+        planetGroup.scale.set(vibrate, vibrate, vibrate)
+      } else {
+        planetGroup.scale.set(1, 1, 1)
+      }
+
+      // 3. Smooth Camera Focus Zoom on Play/Success
+      let targetZ = baseZ
+      if (state === "running") {
+        targetZ = baseZ * 0.85
+      } else if (state === "success") {
+        targetZ = baseZ * 1.25
+      }
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.05)
 
       if (isDragging) {
         // Handled by pointermove
@@ -321,6 +346,10 @@ export function PlanetRenderer({ planetType, state }: PlanetRendererProps) {
 
         // Drift vertical rotation back to center to maintain proper orientation over time
         planetGroup.rotation.x *= 0.96
+
+        // Slow autonomous celestial drift
+        planetGroup.rotation.y += Math.sin(elapsed * 0.2) * 0.0003
+        planetGroup.rotation.x += Math.cos(elapsed * 0.15) * 0.00015
 
         // Normal spin
         sphere.rotation.y += rotSpeedRef.current

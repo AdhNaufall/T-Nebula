@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import { motion, type Variants } from "framer-motion"
 import { cn } from "../lib/utils"
 import type { PlanetType } from "../hooks/useSettings"
@@ -83,6 +84,15 @@ export function CosmicStar({
   className,
 }: CosmicStarProps) {
   const cfg = PLANET_CONFIGS[starType]
+  const [showIgniteWave, setShowIgniteWave] = useState(false)
+
+  useEffect(() => {
+    if (state === "running") {
+      setShowIgniteWave(true)
+      const timer = setTimeout(() => setShowIgniteWave(false), 1200)
+      return () => clearTimeout(timer)
+    }
+  }, [state])
 
   const coronaVariants: Variants = {
     idle: {
@@ -144,6 +154,22 @@ export function CosmicStar({
             opacity: [0.7, 0, 0.7],
           }}
           transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+        />
+      )}
+
+      {/* Ignite / Play — shockwave pulse ring */}
+      {showIgniteWave && (
+        <motion.div
+          className="absolute rounded-full border-2"
+          style={{ 
+            borderColor: cfg.particleColor,
+            boxShadow: `0 0 15px ${cfg.particleColor}`,
+            width: 200, 
+            height: 200 
+          }}
+          initial={{ scale: 0.7, opacity: 0.9 }}
+          animate={{ scale: 2.2, opacity: 0 }}
+          transition={{ duration: 1.0, ease: "easeOut" }}
         />
       )}
 
