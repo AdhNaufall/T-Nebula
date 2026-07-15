@@ -5,6 +5,8 @@ import { CosmicStar, type CosmicState } from "./CosmicStar"
 import { GravityField } from "./GravityField"
 import { SettingsModal } from "./SettingsModal"
 import { SpaceControlPanel } from "./SpaceControlPanel"
+import { TelemetryHUD } from "./TelemetryHUD"
+import { Constellations } from "./Constellations"
 import { useSettings } from "../hooks/useSettings"
 import { SparkleTrail } from "./SparkleTrail"
 import { WarpTransition } from "./WarpTransition"
@@ -156,6 +158,9 @@ export function CosmicTimer() {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-space-900 text-white overflow-hidden">
 
+      {/* ── NASA Telemetry HUD ── */}
+      <TelemetryHUD planetType={settings.planetType} state={timerState} accent={accent} />
+
       {/* ── Parallax Starfield & Nebulae ── */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-space-900">
         {/* Nebulae Gas Cloud 1 (Dynamic color matching planet accent) */}
@@ -176,6 +181,16 @@ export function CosmicTimer() {
             transform: "translate(calc(var(--mx) * 12px), calc(var(--my) * 12px))",
           }}
         />
+
+        {/* Layer 0: Constellations Vector Overlay */}
+        <div
+          className="absolute inset-0 transition-transform duration-300 ease-out pointer-events-none"
+          style={{
+            transform: "translate(calc(var(--mx) * -15px), calc(var(--my) * -15px))",
+          }}
+        >
+          <Constellations accent={accent} />
+        </div>
 
         {/* Layer 1: Deep Stars (Slower, tiny) */}
         <div
