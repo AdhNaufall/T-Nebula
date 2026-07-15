@@ -239,15 +239,35 @@ export function SettingsModal({
                     <label className="text-sm font-medium text-gray-300 uppercase tracking-wider">
                       Focus Duration
                     </label>
-                    <span
-                      className="text-xl font-bold tabular-nums"
-                      style={{ color: accent }}
-                    >
-                      {settings.duration}
-                      <span className="text-sm font-normal text-gray-400 ml-1">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        min={1}
+                        max={180}
+                        value={settings.duration || ""}
+                        onChange={(e) => {
+                          const val = e.target.value === "" ? 0 : Number(e.target.value)
+                          if (val > 0) {
+                            onUpdateDuration(Math.min(180, val))
+                          } else {
+                            onUpdateDuration(0)
+                          }
+                        }}
+                        onBlur={() => {
+                          if (settings.duration < 1) {
+                            onUpdateDuration(25)
+                          }
+                        }}
+                        className="w-16 bg-white/5 border rounded-lg px-2 py-0.5 text-center text-sm font-bold focus:outline-none transition-all font-sans"
+                        style={{
+                          color: accent,
+                          borderColor: `${accent}40`,
+                        }}
+                      />
+                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                         min
                       </span>
-                    </span>
+                    </div>
                   </div>
 
                   {/* Quick presets */}
