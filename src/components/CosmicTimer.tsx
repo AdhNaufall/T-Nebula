@@ -334,6 +334,57 @@ export function CosmicTimer() {
             style={{ filter: `drop-shadow(0 0 4px ${accent})` }}
             transition={{ duration: 0.5 }}
           />
+
+          {/* Glowing Comet Head & Tail */}
+          {progressPercent > 0 && (
+            <>
+              {/* Tail 3 */}
+              {progressPercent > 4.5 && (
+                <circle
+                  cx={160 + 145 * Math.cos((2 * Math.PI * (progressPercent - 4.5)) / 100)}
+                  cy={160 + 145 * Math.sin((2 * Math.PI * (progressPercent - 4.5)) / 100)}
+                  r="1.5"
+                  fill={accent}
+                  opacity="0.2"
+                />
+              )}
+              {/* Tail 2 */}
+              {progressPercent > 2.8 && (
+                <circle
+                  cx={160 + 145 * Math.cos((2 * Math.PI * (progressPercent - 2.8)) / 100)}
+                  cy={160 + 145 * Math.sin((2 * Math.PI * (progressPercent - 2.8)) / 100)}
+                  r="2.2"
+                  fill={accent}
+                  opacity="0.45"
+                  style={{ filter: `drop-shadow(0 0 3px ${accent})` }}
+                />
+              )}
+              {/* Tail 1 */}
+              {progressPercent > 1.2 && (
+                <circle
+                  cx={160 + 145 * Math.cos((2 * Math.PI * (progressPercent - 1.2)) / 100)}
+                  cy={160 + 145 * Math.sin((2 * Math.PI * (progressPercent - 1.2)) / 100)}
+                  r="3.2"
+                  fill={accent}
+                  opacity="0.75"
+                  style={{ filter: `drop-shadow(0 0 5px ${accent})` }}
+                />
+              )}
+              {/* Comet Head */}
+              <motion.circle
+                cx={160 + 145 * Math.cos((2 * Math.PI * progressPercent) / 100)}
+                cy={160 + 145 * Math.sin((2 * Math.PI * progressPercent) / 100)}
+                r="4.8"
+                fill="white"
+                stroke={accent}
+                strokeWidth="1"
+                style={{
+                  filter: `drop-shadow(0 0 6px ${accent}) drop-shadow(0 0 12px ${accent})`,
+                }}
+                transition={{ type: "spring", stiffness: 100, damping: 15 }}
+              />
+            </>
+          )}
         </svg>
 
         {/* Gravity field particles */}
