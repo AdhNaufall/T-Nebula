@@ -1,13 +1,15 @@
 import { useState, useEffect, useMemo } from "react"
 import { motion } from "framer-motion"
-import { Play, Pause, Square, Settings } from "lucide-react"
+import { Play, Pause, Square, Settings, Sliders } from "lucide-react"
 import { CosmicStar, type CosmicState } from "./CosmicStar"
 import { GravityField } from "./GravityField"
 import { SettingsModal } from "./SettingsModal"
+import { SpaceControlPanel } from "./SpaceControlPanel"
 import { useSettings } from "../hooks/useSettings"
 import { SparkleTrail } from "./SparkleTrail"
 import { WarpTransition } from "./WarpTransition"
 import { ShootingStars } from "./ShootingStars"
+import { spaceAudio } from "../lib/spaceAudio"
 
 const STATE_LABELS: Record<CosmicState, string> = {
   idle:    "Orbital Hold — Select your planet and ignite",
@@ -33,6 +35,29 @@ export function CosmicTimer() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [prevDuration, setPrevDuration] = useState(settings.duration)
   const [isWarping, setIsWarping] = useState(false)
+
+  // Sound and Visual Calibration states
+  const [isSoundOn, setIsSoundOn] = useState(false)
+  const [soundVolume, setSoundVolume] = useState(0.5)
+  const [isSparklesOn, setIsSparklesOn] = useState(true)
+  const [isShootingStarsOn, setIsShootingStarsOn] = useState(true)
+  const [isSpaceControlOpen, setIsSpaceControlOpen] = useState(false)
+
+  const handleToggleSound = () => {
+    if (isSoundOn) {
+      spaceAudio.stop()
+      setIsSoundOn(false)
+    } else {
+      spaceAudio.start()
+      spaceAudio.setVolume(soundVolume)
+      setIsSoundOn(true)
+    }
+  }
+
+  const handleChangeVolume = (vol: number) => {
+    setSoundVolume(vol)
+    spaceAudio.setVolume(vol)
+  }
 
   const triggerWarpTransition = (action: () => void) => {
     setIsWarping(true)
@@ -222,10 +247,10 @@ export function CosmicTimer() {
       </div>
 
       {/* ── Shooting Stars Background ── */}
-      <ShootingStars color={accent} />
+      {isShootingStarsOn && <ShootingStars color={accent} />}
 
       {/* ── Sparkle Mouse Drag Trail ── */}
-      <SparkleTrail color={accent} />
+      {isSparklesOn && <SparkleTrail color={accent} />}
 
       {/* ── Space Warp Transition Overlay ── */}
       <WarpTransition active={isWarping} color={accent} />
@@ -267,7 +292,8 @@ export function CosmicTimer() {
         {/* Settings gear */}
         <button
           onClick={handleOpenSettings}
-          title={timerState === 'running' ? "Pause first to change settings" : "Mission Configuration"}
+          title={timerState === 'running' ? "Pause orbit to access flight configuration" : "Mission Configuration"}
+          aria-label="Configure Mission Settings"
           className="group p-2.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-30"
           disabled={timerState === 'running'}
         >
@@ -341,7 +367,8 @@ export function CosmicTimer() {
         <button
           onClick={resetTimer}
           className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95"
-          title="Reset"
+          title="Abort Focus Session (Reset)"
+          aria-label="Abort focus session and reset timer"
         >
           <Square className="w-5 h-5 text-gray-300" />
         </button>
@@ -350,6 +377,8 @@ export function CosmicTimer() {
         <button
           onClick={toggleTimer}
           disabled={timerState === 'success'}
+          title={timerState === 'running' ? "Pause Orbit (Pause Focus Session)" : "Ignite Engine (Start Focus Session)"}
+          aria-label={timerState === 'running' ? "Pause Orbit" : "Ignite Engine"}
           className="group relative p-5 rounded-full border backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 disabled:opacity-40 disabled:pointer-events-none"
           style={{
             backgroundColor: `${accent}10`,
@@ -364,14 +393,14 @@ export function CosmicTimer() {
           )}
         </button>
 
-        {/* Settings shortcut (mobile friendly — duplicate at bottom) */}
+        {/* Space calibration controls (Always accessible) */}
         <button
-          onClick={handleOpenSettings}
-          disabled={timerState === 'running'}
-          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
-          title="Settings"
+          onClick={() => setIsSpaceControlOpen(true)}
+          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95"
+          title="Calibrate Ambient Hum & Space Visuals"
+          aria-label="Calibrate Ambient Hum and Space Visuals"
         >
-          <Settings className="w-5 h-5 text-gray-300" />
+          <Sliders className="w-5 h-5 text-gray-300" />
         </button>
       </div>
 
@@ -397,6 +426,21 @@ export function CosmicTimer() {
       )}
 
       </motion.div>
+
+      {/* ── Space Calibration Panel ── */}
+      <SpaceControlPanel
+        isOpen={isSpaceControlOpen}
+        onClose={() => setIsSpaceControlOpen(false)}
+        accent={accent}
+        isSoundOn={isSoundOn}
+        onToggleSound={handleToggleSound}
+        soundVolume={soundVolume}
+        onChangeVolume={handleChangeVolume}
+        isSparklesOn={isSparklesOn}
+        onToggleSparkles={() => setIsSparklesOn(!isSparklesOn)}
+        isShootingStarsOn={isShootingStarsOn}
+        onToggleShootingStars={() => setIsShootingStarsOn(!isShootingStarsOn)}
+      />
 
       {/* ── Settings Modal ── */}
       <SettingsModal

@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, Check } from "lucide-react"
 import type { Settings, PlanetType } from "../hooks/useSettings"
@@ -97,46 +98,53 @@ interface PlanetCardProps {
   opt: PlanetOption
   selected: boolean
   onClick: () => void
+  onMouseEnter: () => void
+  onMouseLeave: () => void
 }
 
-function PlanetCard({ opt, selected, onClick }: PlanetCardProps) {
-  const { label, description, emoji, accent, glowColor } = opt
+function PlanetCard({ opt, selected, onClick, onMouseEnter, onMouseLeave }: PlanetCardProps) {
+  const { label, emoji, accent, glowColor } = opt
   return (
     <button
       onClick={onClick}
-      className="relative w-full text-left p-3 rounded-xl border transition-all duration-300 focus:outline-none"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      className="relative flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-300 focus:outline-none cursor-pointer group"
       style={{
-        backgroundColor: selected ? `${glowColor}18` : "rgba(255,255,255,0.03)",
-        borderColor: selected ? glowColor : "rgba(255,255,255,0.09)",
+        backgroundColor: selected ? `${glowColor}15` : "rgba(255,255,255,0.02)",
+        borderColor: selected ? glowColor : "rgba(255,255,255,0.08)",
         boxShadow: selected
-          ? `0 0 18px ${glowColor}38, inset 0 0 18px ${glowColor}0a`
+          ? `0 0 15px ${glowColor}30, inset 0 0 10px ${glowColor}10`
           : "none",
       }}
     >
-      <div className="flex items-start gap-3">
-        <span className="text-xl mt-0.5 shrink-0">{emoji}</span>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <span
-              className="font-semibold text-sm"
-              style={{ color: selected ? accent : "white" }}
-            >
-              {label}
-            </span>
-            {selected && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
-                style={{ backgroundColor: accent }}
-              >
-                <Check className="w-2.5 h-2.5 text-black" />
-              </motion.div>
-            )}
-          </div>
-          <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">{description}</p>
-        </div>
-      </div>
+      {/* Glow highlight on hover */}
+      <div 
+        className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+        style={{
+          border: `1px solid ${accent}40`,
+          boxShadow: `0 0 12px ${accent}20`,
+        }}
+      />
+      
+      <span className="text-2xl mb-1.5 transition-transform duration-300 group-hover:scale-110">{emoji}</span>
+      <span
+        className="font-medium text-[11px] tracking-wide transition-colors duration-200"
+        style={{ color: selected ? accent : "#d1d5db" }}
+      >
+        {label}
+      </span>
+      
+      {selected && (
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className="absolute top-1.5 right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0"
+          style={{ backgroundColor: accent }}
+        >
+          <Check className="w-2 h-2 text-black stroke-[3]" />
+        </motion.div>
+      )}
     </button>
   )
 }
@@ -158,6 +166,8 @@ export function SettingsModal({
 }: SettingsModalProps) {
   const currentOpt = PLANET_OPTIONS.find((p) => p.type === settings.planetType)
   const accent = currentOpt?.accent ?? "#66FCF1"
+  const [hoveredPlanet, setHoveredPlanet] = useState<PlanetOption | null>(null)
+  const activePlanet = hoveredPlanet || currentOpt || PLANET_OPTIONS[3]
 
   return (
     <AnimatePresence>
@@ -291,20 +301,56 @@ export function SettingsModal({
                 </div>
 
                 {/* Planet Selection */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-300 uppercase tracking-wider mb-3">
-                    🪐 Planet Selection
+                <div className="mb-5">
+                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                    🪐 Destination Orbit
                   </label>
-                  <div className="flex flex-col gap-2">
+                  <div className="grid grid-cols-3 gap-2">
                     {PLANET_OPTIONS.map((opt) => (
                       <PlanetCard
                         key={opt.type}
                         opt={opt}
                         selected={settings.planetType === opt.type}
                         onClick={() => onUpdatePlanetType(opt.type)}
+                        onMouseEnter={() => setHoveredPlanet(opt)}
+                        onMouseLeave={() => setHoveredPlanet(null)}
                       />
                     ))}
                   </div>
+                </div>
+
+                {/* Active Planet Details Panel */}
+                <div 
+                  className="mb-6 p-4 rounded-xl border transition-all duration-300 overflow-hidden relative"
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.01)",
+                    borderColor: `${activePlanet.glowColor}25`,
+                    boxShadow: `inset 0 0 20px ${activePlanet.glowColor}05`,
+                  }}
+                >
+                  <div 
+                    className="absolute -right-6 -bottom-6 w-24 h-24 rounded-full blur-[35px] opacity-15 pointer-events-none transition-all duration-500"
+                    style={{
+                      background: activePlanet.accent,
+                    }}
+                  />
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-3xl transition-transform duration-300 transform scale-110">{activePlanet.emoji}</span>
+                    <div>
+                      <h3 
+                        className="text-sm font-bold tracking-wider uppercase transition-colors duration-300"
+                        style={{ color: activePlanet.accent }}
+                      >
+                        {activePlanet.label}
+                      </h3>
+                      <p className="text-[9px] text-gray-500 uppercase tracking-widest">
+                        System Diagnostics
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-400 leading-relaxed min-h-[54px] font-sans">
+                    {activePlanet.description}
+                  </p>
                 </div>
 
                 {/* Apply button */}
